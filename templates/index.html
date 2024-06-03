@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<!-- Coding by CodingNepal || www.codingnepalweb.com -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestor de Inventario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <!-- Boxicons CSS -->
+    <link flex href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  </head>
+  <body>
+    <nav class="sidebar locked">
+      <div class="logo_items flex">
+        <span class="nav_image">
+          <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="logo_img" />
+        </span>
+        <span class="logo_name">Repuestos Abarca</span>
+      </div>
+
+      <div class="menu_container">
+        <div class="menu_items">
+          <ul class="menu_item">
+            <div class="menu_title flex">
+              <span class="title">Gestor de Inventario</span>
+              <span class="line"></span>
+            </div>
+            <li class="item">
+              <a href="tabla-vehiculos" class="link flex active" onclick="toggleActive(event); mostarTablas(event)" >
+                <i class="bx bx-car"></i>
+                <span>Vehículos</span>
+              </a>
+            </li>
+            <li class="item">
+              <a href="tabla-repuestos" class="link flex"onclick="toggleActive(event);mostarTablas(event)">
+                <i class="bx bx-cog"></i>
+                <span>Repuestos</span>
+              </a>
+            </li>
+            <li class="item">
+                <a href="tabla-pedidos" class="link flex"onclick="toggleActive(event);mostarTablas(event)">
+                  <i class="bx bx-list-check"></i>
+                  <span>Pedidos</span>
+                </a>
+              </li>
+          </ul>
+
+        </div>
+    </nav>
+
+    <!-- Navbar con boton buscar -->
+    <nav class="navbar flex">
+      <input type="text" placeholder="Buscar..." class="search_box" />
+      <span class="nav_button item">
+        <select name="filtros" id="filtros" title="filtros">
+          <option value="placa">Placa</option>
+          <option value="marca">Marca</option>
+          <option value="modelo">Modelo</option>
+          <option value="año">Año</option>
+          <option value="transmision">Transmisión</option>
+          <option value="estilo">Estilo</option>
+        </select>
+      </span>
+      <span class="nav_button item">
+        <a href="#" id="boton_buscar" class="link flex"><i class="bx bx-search"></i></a>
+      </span>
+      <span class="nav_button item">
+        <a href="/api/vehiculos/insertar" id="boton_anadir" class="link flex"><i class="bx bx-plus"></i></a>
+      </span>
+    </nav>
+        
+
+    <div class="scrollable-table tabla tabla-vehiculos">
+        <table>
+            <thead>
+                <tr>
+                    <th>Placa</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Transmisión</th>
+                    <th>Estilo</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+            <tbody id="vehiculosLista">
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="scrollable-table tabla tabla-repuestos ocultarTabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Año</th>
+                    <th>Cantidad</th>
+                </tr>
+            </thead>
+            <tbody id="empleadoslista">
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="scrollable-table tabla tabla-pedidos ocultarTabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Correo Electronico</th>
+                    <th>Fecha del pedido</th>
+                </tr>
+            </thead>
+            <tbody id="empleadoslista">
+                
+            </tbody>
+        </table>
+    </div>
+    <div class="opcionesDiv opcionesVehiculo container">
+      <h2 class="innerTitle">Opciones Vehículo</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
+      </div>
+      <div class="inner-div">
+        <label for="selPlacaV">Placa:</label>
+        <input type="text" id="selPlacaV" name="selPlacaV">
+    </div>
+    <div class="inner-div">
+        <label for="selMarcaV">Marca:</label>
+        <select id="selMarcaV" name="selMarcaV"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selModeloV">Modelo:</label>
+        <input type="text" id="selModeloV" name="selModeloV">
+    </div>
+    <div class="inner-div">
+        <label for="selAnioV">Año:</label>
+        <input type="number" id="selAnioV" name="selAnioV">
+    </div>
+    <div class="inner-div">
+        <label for="selTrans">Transmisión:</label>
+        <select id="selTrans" name="selTrans"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selEstilo">Estilo:</label>
+        <select id="selEstilo" name="selEstilo"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selColor">Color:</label>
+        <input type="text" id="selColor" name="selColor">
+    </div>
+    <div class="inner-div">
+        <label for="selCombustible">Combustible:</label>
+        <select id="selCombustible" name="selCombustible"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selCilindrada">Cilindrada:</label>
+        <input type="number" id="selCilindrada" name="selCilindrada">
+    </div>
+    <div class="inner-div">
+        <label for="selPasajeros">Número de Pasajeros:</label>
+        <input type="number" id="selPasajeros" name="selPasajeros">
+    </div>
+    <div class="inner-div">
+        <label for="selPuertas">Número de Puertas:</label>
+        <input type="number" id="selPuertas" name="selPuertas">
+    </div>
+    <div class="inner-div">
+      <label for="selEstado">Estado:</label>
+      <input type="checkbox" id="selEstado" name="input12">
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="modificarVehiculo()" class="link flex"><i class="bx bx-pen"></i><span>Modificar</span></a>
+    </div>
+    <div class="item innerButton">
+      <a href="#" class="link flex"><i class="bx bx-trash"></i><span>Eliminar</span></a>
+    </div>
+      </div>
+      <div class="opcionesDiv opcionesRepuesto">
+        <h2 class="innerTitle">Opciones Repuesto</h2>
+        <div class="scrollable-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Fecha de Contratación</th>
+                        <th>Puesto</th>
+                        <th>Activo</th>
+                        <th>Saldo Vacaciones</th>
+                    </tr>
+                </thead>
+                <tbody id="seleccion">
+                    
+                </tbody>
+            </table>
+        </div>
+        <div class="opcionesDiv opcionesPedido">
+          <h2 class="innerTitle">Opciones Pedido</h2>
+          <div class="scrollable-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Nombre</th>
+                          <th>Documento</th>
+                          <th>Fecha de Contratación</th>
+                          <th>Puesto</th>
+                          <th>Activo</th>
+                          <th>Saldo Vacaciones</th>
+                      </tr>
+                  </thead>
+                  <tbody id="seleccion">
+                      
+                  </tbody>
+              </table>
+          </div>
+  </body>
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</html>

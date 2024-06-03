@@ -1,0 +1,27 @@
+### Modificar Vehículo
+POST http://localhost:5000/api/modificar_vehiculo
+Content-Type: application/json
+
+{
+    "nombreMarca": "Toyota",
+    "modelo": "Corolla",
+    "estilo": "Sedan",
+    "año": 2020,
+    "transmision": "Manual",
+    "estado": 1,
+    "color": "Rojo",
+    "combustible": "Gasolina",
+    "cilindrada": 4,
+    "numeroPasajeros": 5,
+    "numeroPuertas": 4,
+    "placaNoCambia": "262624"
+}
+
+
+### Eliminar Vehículo
+POST http://localhost:5000/api/vehiculos/eliminar
+Content-Type: application/json
+
+{
+    "placa": "MTG789"
+}
