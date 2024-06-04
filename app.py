@@ -22,8 +22,7 @@ def ejecutar_stored_procedure(nombre_sp, parametros=None):
     try:
         if parametros:
             # Construir la cadena de parámetros
-            params_str = ', '.join([f"'{v}'" if isinstance(v, str) else str(v) if v is not None else 'NULL' for v in parametros.values()])
-            sql_query = f"EXEC {nombre_sp} {params_str}"
+            sql_query = f"EXEC {nombre_sp} {parametros}"
             logging.debug(f"SQL Query: {sql_query}")
             cursor.execute(sql_query)
         else:
@@ -46,6 +45,23 @@ def ejecutar_stored_procedure(nombre_sp, parametros=None):
 
 @app.route('/')
 def index():
+    return render_template('login.html')
+
+@app.route('/validar', methods=['GET'])
+def validar_credenciales():
+    
+    username = request.args.get('username')
+    password = request.args.get('password')
+
+    resultado = ejecutar_stored_procedure('ValidarCredenciales', f"'{username}', '{password}'")
+
+    if resultado[0][0] == 'Usuario válido':
+        return redirect(url_for('principal'))
+    else:
+        return jsonify({'error': 'Usuario inválido'}), 401
+
+@app.route('/principal')
+def pagina_principal():
     return render_template('index.html')
 
 @app.route('/api/vehiculos', methods=['GET'])
@@ -82,34 +98,34 @@ def obtener_vehiculos():
 @app.route('/api/modificar_vehiculo', methods=['POST'])
 def modificar_vehiculo():
     datos = request.json
-    logging.debug(f"Datos recibidos: {datos}")
-    
-    parametros = {
-        'nombreMarca': datos.get('marca'),
-        'modelo': datos.get('modelo'),
-        'estilo': datos.get('estilo'),
-        'año': datos.get('anio'),
-        'transmision': datos.get('trans'),
-        'estado': datos.get('estado'),
-        'color': datos.get('color'),
-        'combustible': datos.get('combustible'),
-        'cilindrada': datos.get('cilindrada'),
-        'numeroPasajeros': datos.get('pasajeros'),
-        'numeroPuertas': datos.get('puertas'),
-        'placaNoCambia': datos.get('placa')
-    }
-
     try:
-        resultados, columnas = ejecutar_stored_procedure('ModificarVehiculo', parametros)
+        marca = datos.get('marca')
+        modelo = datos.get('modelo')
+        estilo = datos.get('estilo')
+        anio = datos.get('anio')
+        trans = datos.get('trans')
+        estado = datos.get('estado')
+        color = datos.get('color')
+        combustible = datos.get('combustible')
+        cilindrada = datos.get('cilindrada')
+        pasajeros = datos.get('pasajeros')
+        puertas = datos.get('puertas')
+        placa = datos.get('placa')
+
+        parametros = f"'{marca}', '{modelo}', '{estilo}', {anio},'{trans}',{estado},'{color}','{combustible}',{cilindrada},{pasajeros},{puertas},'{placa}'"
+        logging.debug(f"Parámetros: {parametros}")
+        resultados, columnas = ejecutar_stored_procedure('dbo.ModificarVehiculo', parametros)
         if resultados is None or len(resultados) == 0:
-            logging.info("Procedimiento almacenado ejecutado exitosamente.")
-            return jsonify({"message": "Vehículo modificado exitosamente"}), 200
+            logging.info("Vehículo modificado exitosamente.")
         else:
             logging.error("Error en la ejecución del procedimiento almacenado: resultados no vacíos.")
-            return jsonify({"error": "Error modificando el vehículo"}), 500
+        return jsonify({"message": "Vehículo modificado exitosamente"}), 200
+
+
     except Exception as e:
-        logging.exception("Excepción al ejecutar el procedimiento almacenado.")
-        return jsonify({"error": str(e)}), 500
+        logging.exception("Error al obtener los datos del request.")
+        return jsonify({"error": "Datos inválidos"}), 400
+
 
 @app.route('/api/vehiculos/eliminar', methods=['POST'])
 def eliminar_vehiculo():
