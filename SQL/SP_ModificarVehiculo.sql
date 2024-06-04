@@ -1,4 +1,4 @@
-ALTER PROCEDURE dbo.ModificarVehiculo
+CREATE PROCEDURE ModificarVehiculo
     @nombreMarca VARCHAR(42),
     @modelo VARCHAR(64),
     @estilo VARCHAR(42),

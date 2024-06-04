@@ -21,24 +21,15 @@ def ejecutar_stored_procedure(nombre_sp, parametros=None):
 
     try:
         if parametros:
-            # Construir la cadena de parámetros
-            sql_query = f"EXEC {nombre_sp} {parametros}"
-            logging.debug(f"SQL Query: {sql_query}")
-            cursor.execute(sql_query)
+            cursor.execute(f"EXEC {nombre_sp} {parametros}")
         else:
-            sql_query = f"EXEC {nombre_sp}"
-            logging.debug(f"SQL Query: {sql_query}")
-            cursor.execute(sql_query)
+            cursor.execute(f"EXEC {nombre_sp}")
 
         if cursor.description:
             resultados = cursor.fetchall()
-            columnas = [column[0] for column in cursor.description]
-            return resultados, columnas
+            return resultados
         else:
-            return None, None
-    except pyodbc.Error as e:
-        logging.error(f"Error ejecutando el procedimiento almacenado: {e}")
-        raise
+            return None
     finally:
         cursor.close()
         conn.close()
@@ -49,14 +40,14 @@ def index():
 
 @app.route('/validar', methods=['GET'])
 def validar_credenciales():
-    
+    print(request.args)
     username = request.args.get('username')
     password = request.args.get('password')
 
     resultado = ejecutar_stored_procedure('ValidarCredenciales', f"'{username}', '{password}'")
 
     if resultado[0][0] == 'Usuario válido':
-        return redirect(url_for('principal'))
+        return redirect(url_for('pagina_principal'))
     else:
         return jsonify({'error': 'Usuario inválido'}), 401
 
@@ -67,23 +58,23 @@ def pagina_principal():
 @app.route('/api/vehiculos', methods=['GET'])
 def obtener_vehiculos():
     try:
-        resultados, columnas = ejecutar_stored_procedure('SP_ObtenerVehiculos')
+        resultados = ejecutar_stored_procedure('SP_ObtenerVehiculos')
         if resultados:
             vehiculos = []
             for fila in resultados:
                 vehiculo = {
-                    'marca': fila[columnas.index('Nombre de la marca')],
-                    'modelo': fila[columnas.index('Modelo del vehículo')],
-                    'anio': fila[columnas.index('Año del vehículo')],
-                    'estilo': fila[columnas.index('Nombre del Estilo')],
-                    'trans': fila[columnas.index('Tipo de transmision')],
-                    'placa': fila[columnas.index('Placa del vehículo')],
-                    'color': fila[columnas.index('Color del vehículo')],
-                    'combustible': fila[columnas.index('Tipo de combustible')],
-                    'cilindrada': fila[columnas.index('Cilindrada del vehículo')],
-                    'pasajeros': fila[columnas.index('Número de pasajeros')],
-                    'puertas': fila[columnas.index('Número de puertas')],
-                    'estado': fila[columnas.index('Estado del vehiculo')]
+                    'marca': fila[0],
+                    'modelo': fila[1],
+                    'anio': fila[2],
+                    'estilo': fila[3],
+                    'trans': fila[4],
+                    'placa': fila[5],
+                    'color': fila[6],
+                    'combustible': fila[7],
+                    'cilindrada': fila[8],
+                    'pasajeros': fila[9],
+                    'puertas': fila[10],
+                    'estado': fila[11]
                 }
                 vehiculos.append(vehiculo)
             return jsonify(vehiculos), 200
@@ -102,19 +93,19 @@ def modificar_vehiculo():
         marca = datos.get('marca')
         modelo = datos.get('modelo')
         estilo = datos.get('estilo')
-        anio = datos.get('anio')
+        anio = int(datos.get('anio'))
         trans = datos.get('trans')
-        estado = datos.get('estado')
+        estado = int(datos.get('estado'))
         color = datos.get('color')
         combustible = datos.get('combustible')
-        cilindrada = datos.get('cilindrada')
-        pasajeros = datos.get('pasajeros')
-        puertas = datos.get('puertas')
+        cilindrada = int(datos.get('cilindrada'))
+        pasajeros = int(datos.get('pasajeros'))
+        puertas = int(datos.get('puertas'))
         placa = datos.get('placa')
 
         parametros = f"'{marca}', '{modelo}', '{estilo}', {anio},'{trans}',{estado},'{color}','{combustible}',{cilindrada},{pasajeros},{puertas},'{placa}'"
         logging.debug(f"Parámetros: {parametros}")
-        resultados, columnas = ejecutar_stored_procedure('dbo.ModificarVehiculo', parametros)
+        resultados = ejecutar_stored_procedure('ModificarVehiculo', parametros)
         if resultados is None or len(resultados) == 0:
             logging.info("Vehículo modificado exitosamente.")
         else:
@@ -163,7 +154,7 @@ def opciones():
     sps = ['ObtenerMarcas', 'ObtenerTrans', 'ObtenerEstilo', 'ObtenerCombustible']
     resultado = []
     for s in sps:
-        resultados, columnas = ejecutar_stored_procedure(s)
+        resultados = ejecutar_stored_procedure(s)
         if resultados:
             subres = [fila[0] for fila in resultados]
             resultado.append(subres)

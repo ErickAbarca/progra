@@ -1,19 +1,20 @@
 ALTER PROCEDURE SP_ObtenerVehiculos
 AS
 BEGIN
+    SET NOCOUNT ON
     SELECT 
-        M.nombre AS [Nombre de la marca],
-        V.modelo AS [Modelo del vehículo],
-        V.año AS [Año del vehículo],
-        E.nombre AS [Nombre del Estilo],
-        T.nombre AS [Tipo de transmision],
-        V.placa AS [Placa del vehículo],
-        V.color AS [Color del vehículo],
-        C.nombre AS [Tipo de combustible],
-        V.cilindrada AS [Cilindrada del vehículo],
-        V.numeroPasajeros AS [Número de pasajeros],
-        V.numeroPuertas AS [Número de puertas],
-        V.estado AS [Estado del vehiculo]
+        M.nombre,
+        V.modelo,
+        V.año,
+        E.nombre,
+        T.nombre,
+        V.placa,
+        V.color,
+        C.nombre,
+        V.cilindrada,
+        V.numeroPasajeros,
+        V.numeroPuertas,
+        V.estado
 
 
     FROM Vehiculo AS V
@@ -21,5 +22,7 @@ BEGIN
         INNER JOIN Estilo AS E ON V.idEstilo = E.idEstilo
         INNER JOIN Transmision AS T ON V.idTransmision = T.idTransmision
         INNER JOIN Combustible AS C ON V.idCombustible = C.idCombustible
+    
+    SET NOCOUNT OFF
 END
 GO
