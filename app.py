@@ -357,6 +357,128 @@ def insertar_repuesto():
         logging.exception("Error al obtener los datos del request.")
         return jsonify({"error": "Datos inválidos"}), 400
 
+@app.route('/api/clientes', methods=['GET'])
+def obtener_clientes():
+    try:
+        resultados = ejecutar_stored_procedure('obtenerclientes')
+        if resultados:
+            clientes = []
+            for fila in resultados:
+                cliente = {
+                    'id': fila[0],
+                    'nombre': fila[1],
+                    'correo': fila[2],
+                    'direccion': fila[3]
+                }
+                clientes.append(cliente)
+            return jsonify(clientes), 200
+        else:
+            return jsonify({"message": "No se encontraron clientes"}), 404
+    except Exception as e:
+        app.logger.error(f"Error obteniendo clientes: {e}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+
+@app.route('/api/clientes/modificar', methods=['POST'])
+def modificar_cliente():
+    datos = request.json
+    try:
+        idCliente = int(datos.get('idCliente'))
+        nombre = datos.get('nombre')
+        correo = datos.get('correo')
+        direccion = datos.get('direccion')
+
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC modificarClientes '{nombre}', '{correo}', '{direccion}', {idCliente}")
+        conn.commit()
+        des = cursor.description
+        cursor.close()
+        conn.close()
+
+        if des:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
+        else:
+            return jsonify({"message": "Cliente Modificado Exitosamente"}), 200
+
+    except Exception as e:
+        logging.exception("Error al obtener los datos del request.")
+        return jsonify({"error": "Datos inválidos"}), 400
+
+@app.route('/api/clientes/eliminar', methods=['POST'])
+def eliminar_cliente():
+    datos = request.json
+    logging.debug(f"Datos recibidos: {datos}")
+
+    idCliente = datos.get('idCliente')
+
+    try: 
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC eliminarCliente {idCliente}")
+        conn.commit()
+        des = cursor.description
+        cursor.close()
+        conn.close()
+        
+        if des:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
+        else:
+            return jsonify({"message": "Cliente Eliminado"}), 200
+
+    except Exception as e:
+        logging.exception("Excepción al ejecutar el procedimiento almacenado.")
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route('/api/clientes/insertar', methods=['POST'])
+def insertar_cliente():
+    datos = request.json
+    try:
+        nombre = datos.get('nombre')
+        correo = datos.get('correo')
+        direccion = datos.get('direccion')
+
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC Agregar_cliente '{nombre}', '{correo}', '{direccion}'")
+        conn.commit()
+        des = cursor.description
+        cursor.close()
+        conn.close()
+
+        if des:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
+        else:
+            return jsonify({"message": "Cliente Insertado Exitosamente"}), 200
+
+    except Exception as e:
+        logging.exception("Error al obtener los datos del request.")
+        return jsonify({"error": "Datos inválidos"}), 400
+
 @app.route('/api/opciones', methods=['GET'])
 def opciones():
     sps = ['ObtenerMarcas', 'ObtenerTrans', 'ObtenerEstilo', 'ObtenerCombustible']

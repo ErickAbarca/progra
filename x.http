@@ -68,3 +68,32 @@ Content-Type: application/json
 {
     "codigo": 4
 }
+
+### Modificar Cliente
+POST http://localhost:5000/api/clientes/modificar
+Content-Type: application/json
+
+{
+    "idCliente": 1,
+    "nombre": "Juan",
+    "correo": "juan@gmail.com",
+    "direccion": "Guanacaste"
+}
+
+### Eliminar Cliente
+POST http://localhost:5000/api/clientes/eliminar
+Content-Type: application/json
+
+{
+    "idCliente": 2
+}
+
+### Agregar Cliente
+POST http://localhost:5000/api/clientes/insertar
+Content-Type: application/json
+
+{
+    "nombre": "Maria",
+    "correo": "maria@gmail.com",
+    "direccion": "San Jose"
+}

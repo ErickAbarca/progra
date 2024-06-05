@@ -138,7 +138,7 @@
                   <th>Opciones</th>
               </tr>
           </thead>
-          <tbody id="clienteslista">
+          <tbody id="clientesLista">
               
           </tbody>
       </table>
@@ -338,6 +338,58 @@
     </div>
     </div>  
 
+  
+    <div class="opcionesDiv opcionesCliente container clientes">
+      <h2 class="innerTitle">Opciones Cliente</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
+      </div>
+      <div class="inner-div">
+        <label for="idC">Id:</label>
+        <input type="text" id="idC" name="idC">
+    </div>
+      <div class="inner-div">
+        <label for="selNombreC">Nombre:</label>
+        <input type="text" id="selNombreC" name="selNombreC">
+    </div>
+    <div class="inner-div">
+        <label for="selCorreoC">Correo:</label>
+        <input type="text" id="selCorreoC" name="selCorreoC">
+    </div>
+    <div class="inner-div">
+        <label for="selDireccionC">Dirección:</label>
+        <input type="text" id="selDireccionC" name="selDireccionC">
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="modificarCliente()" class="link flex"><i class="bx bx-pen"></i><span>Modificar</span></a>
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="eliminarCliente()" class="link flex"><i class="bx bx-trash"></i><span>Eliminar</span></a>
+    </div>
+    </div>  
+
+
+    <div class="opcionesDiv insertarCliente container clientes">
+      <h2 class="innerTitle">Insertar Cliente</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
+      </div>
+      <div class="inner-div">
+        <label for="selNombreCI">Nombre:</label>
+        <input type="text" id="selNombreCI" name="selNombreCI">
+    </div>
+    <div class="inner-div">
+        <label for="selCorreoCI">Correo:</label>
+        <input type="text" id="selCorreoCI" name="selCorreoCI">
+    </div>
+    <div class="inner-div">
+        <label for="selDireccionCI">Dirección:</label>
+        <input type="text" id="selDireccionCI" name="selDireccionCI">
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="insertarCliente()" class="link flex"><i class="bx bx-plus"></i><span>Añadir</span></a>
+    </div>
+    </div>
 
         <div class="opcionesDiv opcionesPedido">
           <h2 class="innerTitle">Opciones Pedido</h2>

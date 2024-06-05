@@ -83,7 +83,7 @@ let activo = 'vehiculos';
         activo = 'pedidos';
     } else if (id === 'tabla-clientes') {
         opciones = ['Nombre', 'Dirección', 'Email'];
-        document.getElementById('boton_anadir').href = '/api/clientes/insertar';
+        document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarCliente()');
         activo = 'clientes';
     }
 
@@ -222,6 +222,53 @@ let activo = 'vehiculos';
     });
   }
 
+  function cargarClientes() {
+    url = 'http://127.0.0.1:5000/api/clientes';
+    fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al obtener el archivo JSON');
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      const tabla = document.getElementById('clientesLista');
+      tabla.innerHTML = '';
+      data.forEach(cliente => {
+        const fila = document.createElement('tr');
+        const nombre = document.createElement('td');
+        nombre.textContent = cliente.nombre;
+        fila.appendChild(nombre);
+        const direccion = document.createElement('td');
+        direccion.textContent = cliente.correo;
+        fila.appendChild(direccion);
+        const email = document.createElement('td');
+        email.textContent = cliente.direccion;
+        fila.appendChild(email);
+        
+        const opciones = document.createElement('td');
+        opciones.className = 'opcionesContainer';
+    
+        const boton3 = document.createElement('button');
+        boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
+        boton3.addEventListener('click', function() {
+          const mostrado = document.querySelector('.opcionesCliente');
+          mostrado.style.display = 'grid';
+          document.getElementById('idC').value=cliente.id;
+          document.getElementById('selNombreC').value=cliente.nombre;
+          document.getElementById('selDireccionC').value=cliente.direccion;
+          document.getElementById('selCorreoC').value=cliente.correo;
+          document.getElementById('idC').disabled=true;
+        });
+        opciones.appendChild(boton3);
+        fila.appendChild(opciones);
+        tabla.appendChild(fila);
+      });
+      
+    });
+  }
+
   function modificarVehiculo(){
     const placa = document.getElementById('selPlacaV').value;
     const marca = document.getElementById('selMarcaV').value;
@@ -285,6 +332,28 @@ let activo = 'vehiculos';
     })
   }
 
+  function modificarCliente(){
+    const id = document.getElementById('idC').value;
+    const nombre = document.getElementById('selNombreC').value;
+    const direccion = document.getElementById('selDireccionC').value;
+    const correo = document.getElementById('selCorreoC').value;
+
+    const url = 'http://127.0.0.1:5000/api/clientes/modificar';
+    const data = {idCliente:id,nombre:nombre,direccion:direccion,correo:correo};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })}
+
   function eliminarVehiculo(){
     const placa = document.getElementById('selPlacaV').value;
     const url = 'http://127.0.0.1:5000/api/vehiculos/eliminar';
@@ -306,6 +375,23 @@ let activo = 'vehiculos';
     const codigo = document.getElementById('selCodigoR').value;
     const url = 'http://127.0.0.1:5000/api/repuestos/eliminar';
     const data = {codigo:codigo};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })}
+
+  function eliminarCliente(){
+    const id = document.getElementById('idC').value;
+    const url = 'http://127.0.0.1:5000/api/clientes/eliminar';
+    const data = {idCliente:id};
     fetch(url, {
       method: 'POST',
       headers: {
@@ -379,6 +465,28 @@ let activo = 'vehiculos';
       window.location.reload();
     })}
 
+  function insertarCliente(){
+    const nombre = document.getElementById('selNombreCI').value;
+    const direccion = document.getElementById('selDireccionCI').value;
+    const correo = document.getElementById('selCorreoCI').value;
+
+    const url = 'http://127.0.0.1:5000/api/clientes/insertar';
+
+    const data = {nombre:nombre,direccion:direccion,correo:correo};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      alert(response.text());
+      window.location.reload();
+    })}
+
   function cargarOpciones(){
     fetch('http://127.0.0.1:5000/api/opciones')
     .then(response => {
@@ -423,9 +531,13 @@ let activo = 'vehiculos';
     const mostrado = document.querySelector('.insertarRepuesto');
     mostrado.style.display = 'grid';
   }
+  function mostrarInsertarCliente(){
+    const mostrado = document.querySelector('.insertarCliente');
+    mostrado.style.display = 'grid';
+  }
   
-
+  cargarOpciones();
   cargarVehiculos();
   cargarRepuestos();
-  cargarOpciones();
+  cargarClientes();
   
