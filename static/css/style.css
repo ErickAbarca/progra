@@ -294,34 +294,52 @@ tbody tr:hover {
 }
 
 #cerrarButton {
-    grid-column: span 1;
-    max-width: 150px;
+  grid-column: span 1;
+  max-width: 150px;
 }
 
 .innerTitle {
-    grid-column: span 3;
-    text-align: center;
+  grid-column: span 3;
+  text-align: center;
 }
 .inner-div {
-    display: flex;
-    flex-direction: column; 
+  display: flex;
+  flex-direction: column; 
 }
 
 .inner-div label {
-    margin-bottom: 5px; 
-    font-weight: bold;
+  margin-bottom: 5px; 
+  font-weight: bold;
 }
 
 .inner-div input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.inner-div select {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
+.inner-div select {
+padding: 8px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+.repuestos {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.repuestos .innerButton{
+    grid-column: span 1;
+}
+
+.repuestos .innerTitle {
+    grid-column: span 2;
+}
+
+.repuestos .inner-div {
+    grid-column: span 1;
+}
+
+
 
 
 

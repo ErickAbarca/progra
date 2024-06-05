@@ -71,17 +71,22 @@ let activo = 'vehiculos';
     opciones = [];
     if (id === 'tabla-vehiculos') {
         opciones = ['Placa','Marca', 'Modelo', 'Año', 'Transmisión', 'Estilo'];
-        document.getElementById('boton_anadir').href = '/api/vehiculos/insertar';
+        document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarVehiculo()');
         activo = 'vehiculos';
     } else if (id === 'tabla-repuestos') {
         opciones = ['Nombre', 'Marca', 'Modelo', 'Año', 'Cantidad'];
-        document.getElementById('boton_anadir').href = '/api/repuestos/insertar';
+        document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarRepuesto()');
         activo = 'repuestos';
     } else if (id === 'tabla-pedidos') {
         opciones = ['Nombre', 'Dirección', 'Correo', 'Fecha'];
         document.getElementById('boton_anadir').href = '/api/pedidos/insertar';
         activo = 'pedidos';
+    } else if (id === 'tabla-clientes') {
+        opciones = ['Nombre', 'Dirección', 'Email'];
+        document.getElementById('boton_anadir').href = '/api/clientes/insertar';
+        activo = 'clientes';
     }
+
 
     const filtro = document.getElementById('filtros');
         filtro.innerHTML = '';
@@ -92,8 +97,8 @@ let activo = 'vehiculos';
           filtro.appendChild(op);
         });
 
-    const tabla = document.querySelector('.'+id);
-    tabla.classList.remove('ocultarTabla');
+    const tablax = document.querySelector('.'+id);
+    tablax.classList.remove('ocultarTabla');
   }
   function cargarVehiculos() {
     url = 'http://127.0.0.1:5000/api/vehiculos';
@@ -162,6 +167,61 @@ let activo = 'vehiculos';
     });
   }
 
+  function cargarRepuestos() {
+    url = 'http://127.0.0.1:5000/api/repuestos';
+    fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al obtener el archivo JSON');
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      const tabla = document.getElementById('repuestosLista');
+      tabla.innerHTML = '';
+      data.forEach(repuesto => {
+        const fila = document.createElement('tr');
+        const nombre = document.createElement('td');
+        nombre.textContent = repuesto.nombre;
+        fila.appendChild(nombre);
+        const marca = document.createElement('td');
+        marca.textContent = repuesto.marca;
+        fila.appendChild(marca);
+        const modelo = document.createElement('td');
+        modelo.textContent = repuesto.modelo;
+        fila.appendChild(modelo);
+        const anio = document.createElement('td');
+        anio.textContent = repuesto.anio;
+        fila.appendChild(anio);
+        const cantidad = document.createElement('td');
+        cantidad.textContent = repuesto.cantidad;
+        fila.appendChild(cantidad);
+        
+        const opciones = document.createElement('td');
+        opciones.className = 'opcionesContainer';
+    
+        const boton3 = document.createElement('button');
+        boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
+        boton3.addEventListener('click', function() {
+          const mostrado = document.querySelector('.opcionesRepuesto');
+          mostrado.style.display = 'grid';
+          document.getElementById('selCodigoR').value=repuesto.codigo;
+          document.getElementById('selNombreR').value=repuesto.nombre;
+          document.getElementById('selMarcaR').value=repuesto.marca;
+          document.getElementById('selModeloR').value=repuesto.modelo;
+          document.getElementById('selAnioR').value=repuesto.anio;
+          document.getElementById('selCodigoR').disabled=true;
+          document.getElementById('selCantidadR').value=repuesto.cantidad;
+        });
+        opciones.appendChild(boton3);
+        fila.appendChild(opciones);
+        tabla.appendChild(fila);
+      });
+      
+    });
+  }
+
   function modificarVehiculo(){
     const placa = document.getElementById('selPlacaV').value;
     const marca = document.getElementById('selMarcaV').value;
@@ -200,10 +260,52 @@ let activo = 'vehiculos';
     })
   }
 
+  function modificarRepuesto(){
+    const codigo = document.getElementById('selCodigoR').value;
+    const nombre = document.getElementById('selNombreR').value;
+    const marca = document.getElementById('selMarcaR').value;
+    const modelo = document.getElementById('selModeloR').value;
+    const anio = document.getElementById('selAnioR').value;
+    const cantidad = document.getElementById('selCantidadR').value;
+
+    const url = 'http://127.0.0.1:5000/api/repuestos/modificar';
+    const data = {codigo:codigo,nombre:nombre,marca:marca,modelo:modelo,anio:parseInt(anio),cantidad:parseInt(cantidad)};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })
+  }
+
   function eliminarVehiculo(){
     const placa = document.getElementById('selPlacaV').value;
     const url = 'http://127.0.0.1:5000/api/vehiculos/eliminar';
     const data = {placa:placa};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })}
+
+  function eliminarRepuesto(){
+    const codigo = document.getElementById('selCodigoR').value;
+    const url = 'http://127.0.0.1:5000/api/repuestos/eliminar';
+    const data = {codigo:codigo};
     fetch(url, {
       method: 'POST',
       headers: {
@@ -250,9 +352,32 @@ let activo = 'vehiculos';
         throw new Error(response.statusText);
       }
       console.log(response.text());
-    })
+    })}
 
-  }
+  function insertarRepuesto(){
+    const codigo = document.getElementById('selCodigoRI').value;
+    const nombre = document.getElementById('selNombreRI').value;
+    const marca = document.getElementById('selMarcaRI').value;
+    const modelo = document.getElementById('selModeloRI').value;
+    const anio = document.getElementById('selAnioRI').value;
+    const cantidad = document.getElementById('selCantidadRI').value;
+
+    const url = 'http://127.0.0.1:5000/api/repuestos/insertar';
+    const data = {codigo:codigo,nombre:nombre,marca:marca,modelo:modelo,anio:parseInt(anio),cantidad:parseInt(cantidad)};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      alert(response.text());
+      window.location.reload();
+    })}
 
   function cargarOpciones(){
     fetch('http://127.0.0.1:5000/api/opciones')
@@ -294,8 +419,13 @@ let activo = 'vehiculos';
     const mostrado = document.querySelector('.insertarVehiculo');
     mostrado.style.display = 'grid';
   }
+  function mostrarInsertarRepuesto(){
+    const mostrado = document.querySelector('.insertarRepuesto');
+    mostrado.style.display = 'grid';
+  }
   
 
   cargarVehiculos();
+  cargarRepuestos();
   cargarOpciones();
   

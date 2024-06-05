@@ -47,3 +47,24 @@ Content-Type: application/json
     "puertas": 5,
     "placa": "BJX871"
 }
+
+### Modificar Repuesto
+POST http://localhost:5000/api/repuestos/modificar
+Content-Type: application/json
+
+{
+    "codigo": 1,
+    "nombre": "Tijereta delantera derecha",
+    "marca": "Toyota",
+    "modelo": "4Runner",
+    "cantidad": 1,
+    "anio": 1985
+}
+
+### Eliminar Repuesto
+POST http://localhost:5000/api/repuestos/eliminar
+Content-Type: application/json
+
+{
+    "codigo": 4
+}

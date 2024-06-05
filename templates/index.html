@@ -27,19 +27,25 @@
               <span class="line"></span>
             </div>
             <li class="item">
-              <a href="tabla-vehiculos" class="link flex active" onclick="toggleActive(event); mostarTablas(event)" >
+              <a href="tabla-vehiculos" class="link flex active" onclick="toggleActive(event); mostarTablas(event);" >
                 <i class="bx bx-car"></i>
                 <span>Vehículos</span>
               </a>
             </li>
             <li class="item">
-              <a href="tabla-repuestos" class="link flex"onclick="toggleActive(event);mostarTablas(event)">
+              <a href="tabla-repuestos" class="link flex"onclick="toggleActive(event);mostarTablas(event);">
                 <i class="bx bx-cog"></i>
                 <span>Repuestos</span>
               </a>
             </li>
             <li class="item">
-                <a href="tabla-pedidos" class="link flex"onclick="toggleActive(event);mostarTablas(event)">
+              <a href="tabla-clientes" class="link flex"onclick="toggleActive(event);mostarTablas(event);">
+                <i class="bx bx-user-check"></i>
+                <span>Clientes</span>
+              </a>
+            </li>
+            <li class="item">
+                <a href="tabla-pedidos" class="link flex"onclick="toggleActive(event);mostarTablas(event);">
                   <i class="bx bx-list-check"></i>
                   <span>Pedidos</span>
                 </a>
@@ -98,9 +104,10 @@
                     <th>Modelo</th>
                     <th>Año</th>
                     <th>Cantidad</th>
+                    <th>Opciones</th>
                 </tr>
             </thead>
-            <tbody id="empleadoslista">
+            <tbody id="repuestosLista">
                 
             </tbody>
         </table>
@@ -113,13 +120,29 @@
                     <th>Dirección</th>
                     <th>Correo Electronico</th>
                     <th>Fecha del pedido</th>
+                    <th>Opciones</th>
                 </tr>
             </thead>
-            <tbody id="empleadoslista">
+            <tbody id="pedidoslista">
                 
             </tbody>
         </table>
     </div>
+    <div class="scrollable-table tabla tabla-clientes ocultarTabla">
+      <table>
+          <thead>
+              <tr>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Direccion</th>
+                  <th>Opciones</th>
+              </tr>
+          </thead>
+          <tbody id="clienteslista">
+              
+          </tbody>
+      </table>
+  </div>
 
     <div class="opcionesDiv opcionesVehiculo container">
       <h2 class="innerTitle">Opciones Vehículo</h2>
@@ -240,25 +263,82 @@
       <a href="#" onclick="insertarVehiculo()" class="link flex"><i class="bx bx-plus"></i><span>Añadir</span></a>
     </div>
     </div>
-      <div class="opcionesDiv opcionesRepuesto">
-        <h2 class="innerTitle">Opciones Repuesto</h2>
-        <div class="scrollable-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Documento</th>
-                        <th>Fecha de Contratación</th>
-                        <th>Puesto</th>
-                        <th>Activo</th>
-                        <th>Saldo Vacaciones</th>
-                    </tr>
-                </thead>
-                <tbody id="seleccion">
-                    
-                </tbody>
-            </table>
-        </div>
+
+
+    <div class="opcionesDiv opcionesRepuesto container repuestos">
+      <h2 class="innerTitle">Opciones Repuesto</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
+      </div>
+      <div class="inner-div">
+        <label for="selCodigoR">Código:</label>
+        <input type="text" id="selCodigoR" name="selCodigoR">
+    </div>
+      <div class="inner-div">
+        <label for="selNombreR">Nombre:</label>
+        <input type="text" id="selNombreR" name="selNombreR">
+    </div>
+    <div class="inner-div">
+        <label for="selMarcaR">Marca:</label>
+        <select id="selMarcaR" name="selMarcaR" class="selMarca"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selModeloR">Modelo:</label>
+        <input type="text" id="selModeloR" name="selModeloR">
+    </div>
+    <div class="inner-div">
+        <label for="selAnioR">Año:</label>
+        <input type="number" id="selAnioR" name="selAnioR">
+    </div>
+    <div class="inner-div">
+        <label for="selCantidadR">Cantidad:</label>
+        <input type="number" id="selCantidadR" name="selCantidadR">
+    </div>
+
+    <div class="item innerButton">
+      <a href="#" onclick="modificarRepuesto()" class="link flex"><i class="bx bx-pen"></i><span>Modificar</span></a>
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="eliminarRepuesto()" class="link flex"><i class="bx bx-trash"></i><span>Eliminar</span></a>
+    </div>
+    </div>  
+
+    <div class="opcionesDiv insertarRepuesto container repuestos">
+      <h2 class="innerTitle">Insertar Repuesto</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
+      </div>
+      <div class="inner-div">
+        <label for="selCodigoRI">Código:</label>
+        <input type="text" id="selCodigoRI" name="selCodigoRI">
+    </div>
+      <div class="inner-div">
+        <label for="selNombreRI">Nombre:</label>
+        <input type="text" id="selNombreRI" name="selNombreRI">
+    </div>
+    <div class="inner-div">
+        <label for="selMarcaRI">Marca:</label>
+        <select id="selMarcaRI" name="selMarcaRI" class="selMarca"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selModeloRI">Modelo:</label>
+        <input type="text" id="selModeloRI" name="selModeloRI">
+    </div>
+    <div class="inner-div">
+        <label for="selAnioRI">Año:</label>
+        <input type="number" id="selAnioRI" name="selAnioRI">
+    </div>
+    <div class="inner-div">
+        <label for="selCantidadRI">Cantidad:</label>
+        <input type="number" id="selCantidadRI" name="selCantidadRI">
+    </div>
+
+    <div class="item innerButton">
+      <a href="#" onclick="insertarRepuesto()" class="link flex"><i class="bx bx-plus"></i><span>Añadir</span></a>
+    </div>
+    </div>  
+
+
         <div class="opcionesDiv opcionesPedido">
           <h2 class="innerTitle">Opciones Pedido</h2>
           <div class="scrollable-table">
