@@ -109,5 +109,3 @@ BEGIN
     END
 END
 GO
--- example to execute the stored procedure we just created
-EXECUTE dbo.AgregarVehiculo 'Toyota', 1, 'Cashback', 2021, 'Manual', '119202', 0, 'Negro', 'Diesel', 12, 2,2

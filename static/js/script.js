@@ -92,9 +92,6 @@ let activo = 'vehiculos';
           filtro.appendChild(op);
         });
 
-
-
-
     const tabla = document.querySelector('.'+id);
     tabla.classList.remove('ocultarTabla');
   }
@@ -203,6 +200,60 @@ let activo = 'vehiculos';
     })
   }
 
+  function eliminarVehiculo(){
+    const placa = document.getElementById('selPlacaV').value;
+    const url = 'http://127.0.0.1:5000/api/vehiculos/eliminar';
+    const data = {placa:placa};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })}
+
+  function insertarVehiculo(){
+    const placa = document.getElementById('selPlacaVI').value;
+    const marca = document.getElementById('selMarcaVI').value;
+    const modelo = document.getElementById('selModeloVI').value;
+    const anio = document.getElementById('selAnioVI').value;
+    const trans = document.getElementById('selTransVI').value;
+    const estilo = document.getElementById('selEstiloVI').value;
+    const color = document.getElementById('selColorVI').value;
+    const combustible = document.getElementById('selCombustibleVI').value;
+    const cilindrada = document.getElementById('selCilindradaVI').value;
+    const pasajeros = document.getElementById('selPasajerosVI').value;
+    const puertas = document.getElementById('selPuertasVI').value;
+    let estado = document.getElementById('selEstadoVI').value;
+    if (estado) {
+      estado = 1;
+    } else {
+      estado = 0;
+    }
+    
+    const url = 'http://127.0.0.1:5000/api/vehiculos/insertar';
+    const data = {placa:placa,marca:marca,modelo:modelo,anio:parseInt(anio),trans:trans,estilo:estilo,color:color,combustible:combustible,cilindrada:parseInt(cilindrada),pasajeros:parseInt(pasajeros),puertas:parseInt(puertas),estado:estado};
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      console.log(response.text());
+    })
+
+  }
+
   function cargarOpciones(){
     fetch('http://127.0.0.1:5000/api/opciones')
     .then(response => {
@@ -213,18 +264,20 @@ let activo = 'vehiculos';
       return response.json();
     })
     .then(data =>{
-      const selectMarcas=document.getElementById('selMarcaV');
-      const selectTrans=document.getElementById('selTrans');
-      const selectEstilo=document.getElementById('selEstilo');
-      const selectCombustible=document.getElementById('selCombustible');
+      const selectMarcas=document.querySelectorAll('.selMarca');
+      const selectTrans=document.querySelectorAll('.selTrans');
+      const selectEstilo=document.querySelectorAll('.selEstilo');
+      const selectCombustible=document.querySelectorAll('.selCombustible');
       const selects = [selectMarcas,selectTrans,selectEstilo,selectCombustible];
       selects.forEach(cargar);
       function cargar(select,index){
         data[index].forEach(opcion => {
-          const op =  document.createElement('option');
-          op.value = opcion;
-          op.textContent = opcion;
-          select.appendChild(op);
+          select.forEach(sel => {
+            const op =  document.createElement('option');
+            op.value = opcion;
+            op.textContent = opcion;
+            sel.appendChild(op);
+          });
         });
       }
     });
@@ -236,6 +289,13 @@ let activo = 'vehiculos';
       mostrar.style.display = 'none';
     });
   }
+
+  function mostrarInsertarVehiculo(){
+    const mostrado = document.querySelector('.insertarVehiculo');
+    mostrado.style.display = 'grid';
+  }
+  
+
   cargarVehiculos();
   cargarOpciones();
   

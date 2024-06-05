@@ -40,7 +40,6 @@ def index():
 
 @app.route('/validar', methods=['GET'])
 def validar_credenciales():
-    print(request.args)
     username = request.args.get('username')
     password = request.args.get('password')
 
@@ -50,6 +49,33 @@ def validar_credenciales():
         return redirect(url_for('pagina_principal'))
     else:
         return jsonify({'error': 'Usuario inválido'}), 401
+
+@app.route('/api/olvidar', methods=['GET'])
+def olvidar():
+    return render_template('olvidar.html')
+
+@app.route('/cambiar', methods=['POST'])
+def cambiar():
+    username = request.args.get('username')
+    new_password = request.args.get('password')
+
+    server = 'ERICKPC'
+    database = 'repuestos'
+    username = 'hola'
+    password = '12345678'
+    conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+    conn = pyodbc.connect(conn_str)
+    cursor = conn.cursor()
+    
+    try:
+        cursor.execute(f"EXEC CambiarContrasena '{username}', '{new_password}'")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({'message': 'Contraseña cambiada exitosamente'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/principal')
 def pagina_principal():
@@ -103,16 +129,26 @@ def modificar_vehiculo():
         puertas = int(datos.get('puertas'))
         placa = datos.get('placa')
 
-        parametros = f"'{marca}', '{modelo}', '{estilo}', {anio},'{trans}',{estado},'{color}','{combustible}',{cilindrada},{pasajeros},{puertas},'{placa}'"
-        logging.debug(f"Parámetros: {parametros}")
-        resultados = ejecutar_stored_procedure('ModificarVehiculo', parametros)
-        if resultados is None or len(resultados) == 0:
-            logging.info("Vehículo modificado exitosamente.")
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC ModificarVehiculo '{marca}', '{modelo}', '{estilo}', {anio},'{trans}',{estado},'{color}','{combustible}',{cilindrada},{pasajeros},{puertas},'{placa}'")
+        conn.commit()
+        des = cursor.description
+        cursor.close()
+        conn.close()
+
+        if des:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
         else:
-            logging.error("Error en la ejecución del procedimiento almacenado: resultados no vacíos.")
-        return jsonify({"message": "Vehículo modificado exitosamente"}), 200
-
-
+            return jsonify({"message": "No se encontraron vehículos"}), 404
     except Exception as e:
         logging.exception("Error al obtener los datos del request.")
         return jsonify({"error": "Datos inválidos"}), 400
@@ -124,25 +160,75 @@ def eliminar_vehiculo():
     logging.debug(f"Datos recibidos: {datos}")
 
     placa = datos.get('placa')
-    if not placa:
-        logging.error("El campo 'placa' es obligatorio.")
-        return jsonify({"error": "El campo 'placa' es obligatorio"}), 400
 
-    parametros = {
-        'placa': placa
-    }
+    try: 
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
 
-    try:
-        resultados, columnas = ejecutar_stored_procedure('dbo.EliminarVehiculo', parametros)
-        if resultados is None or len(resultados) == 0:
-            logging.info("Vehículo eliminado exitosamente.")
-            return jsonify({"message": "Vehículo eliminado exitosamente"}), 200
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC EliminarVehiculo '{placa}'")
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        if cursor.description:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
         else:
-            logging.error("Error en la ejecución del procedimiento almacenado: resultados no vacíos.")
-            return jsonify({"error": "Error eliminando el vehículo"}), 500
+            return jsonify({"message": "No se encontraron vehículos"}), 404
+
     except Exception as e:
         logging.exception("Excepción al ejecutar el procedimiento almacenado.")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/vehiculos/insertar', methods=['POST'])
+def insertar_vehiculo():
+    datos = request.json
+    try:
+        marca = datos.get('marca')
+        modelo = datos.get('modelo')
+        estilo = datos.get('estilo')
+        anio = int(datos.get('anio'))
+        trans = datos.get('trans')
+        estado = int(datos.get('estado'))
+        color = datos.get('color')
+        combustible = datos.get('combustible')
+        cilindrada = int(datos.get('cilindrada'))
+        pasajeros = int(datos.get('pasajeros'))
+        puertas = int(datos.get('puertas'))
+        placa = datos.get('placa')
+
+        server = 'ERICKPC'
+        database = 'repuestos'
+        username = 'hola'
+        password = '12345678'
+        conn_str = f'DRIVER=ODBC Driver 17 for SQL Server;SERVER={server};DATABASE={database};UID={username};PWD={password}'
+
+        conn = pyodbc.connect(conn_str)
+        cursor = conn.cursor()
+
+        cursor.execute(f"EXEC AgregarVehiculo '{marca}', '{modelo}', '{estilo}', {anio}, '{trans}', '{placa}', {estado}, '{color}', '{combustible}', {cilindrada}, {pasajeros}, {puertas}")
+        conn.commit()
+        des = cursor.description
+        cursor.close()
+        conn.close()
+
+        if des:
+            resultados = cursor.fetchall()
+            return jsonify(resultados), 200
+        else:
+            return jsonify({"message": "No se encontraron vehículos"}), 404
+        
+
+    except Exception as e:
+        logging.exception("Error al obtener los datos del request.")
+        return jsonify({"error": "Datos inválidos"}), 400
+
 
 
 @app.route('/api/repuestos/insertar', methods=['GET'])

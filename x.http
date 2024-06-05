@@ -25,3 +25,25 @@ Content-Type: application/json
 {
     "placa": "MTG789"
 }
+
+### Agregar Vehículo
+
+
+
+POST http://localhost:5000/api/vehiculos/insertar
+Content-Type: application/json
+
+{
+    "marca": "Hyundai",
+    "modelo": "Tucson",
+    "estilo": "SUV",
+    "anio": 2016,
+    "trans": "Tiptronic",
+    "estado": 1,
+    "color": "Azul",
+    "combustible": "Gasolina",
+    "cilindrada": 4,
+    "pasajeros": 5,
+    "puertas": 5,
+    "placa": "BJX871"
+}

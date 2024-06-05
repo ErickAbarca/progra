@@ -14,9 +14,9 @@
     <nav class="sidebar locked">
       <div class="logo_items flex">
         <span class="nav_image">
-          <img src="{{ url_for('static', filename='images/logo.jpeg') }}" alt="logo_img" />
+          <img src="{{ url_for('static', filename='images/lgo.jpeg') }}" alt="logo_img" />
         </span>
-        <span class="logo_name">Repuestos Abarca</span>
+        <span class="logo_name">Repuestos</span>
       </div>
 
       <div class="menu_container">
@@ -63,10 +63,10 @@
         </select>
       </span>
       <span class="nav_button item">
-        <a href="#" id="boton_buscar" class="link flex"><i class="bx bx-search"></i></a>
+        <a id="boton_buscar" class="link flex"><i class="bx bx-search"></i></a>
       </span>
       <span class="nav_button item">
-        <a href="/api/vehiculos/insertar" id="boton_anadir" class="link flex"><i class="bx bx-plus"></i></a>
+        <a onclick="mostrarInsertarVehiculo()" id="boton_anadir" class="link flex"><i class="bx bx-plus"></i></a>
       </span>
     </nav>
         
@@ -120,6 +120,7 @@
             </tbody>
         </table>
     </div>
+
     <div class="opcionesDiv opcionesVehiculo container">
       <h2 class="innerTitle">Opciones Vehículo</h2>
       <div class="item innerButton" id="cerrarButton">
@@ -131,7 +132,7 @@
     </div>
     <div class="inner-div">
         <label for="selMarcaV">Marca:</label>
-        <select id="selMarcaV" name="selMarcaV"></select>
+        <select id="selMarcaV" name="selMarcaV" class="selMarca"></select>
     </div>
     <div class="inner-div">
         <label for="selModeloV">Modelo:</label>
@@ -142,20 +143,20 @@
         <input type="number" id="selAnioV" name="selAnioV">
     </div>
     <div class="inner-div">
-        <label for="selTrans">Transmisión:</label>
-        <select id="selTrans" name="selTrans"></select>
-    </div>
-    <div class="inner-div">
-        <label for="selEstilo">Estilo:</label>
-        <select id="selEstilo" name="selEstilo"></select>
-    </div>
-    <div class="inner-div">
-        <label for="selColor">Color:</label>
-        <input type="text" id="selColor" name="selColor">
-    </div>
-    <div class="inner-div">
-        <label for="selCombustible">Combustible:</label>
-        <select id="selCombustible" name="selCombustible"></select>
+      <label for="selTrans">Transmisión:</label>
+      <select id="selTrans" name="selTrans" class="selTrans"></select>
+  </div>
+  <div class="inner-div">
+      <label for="selEstilo">Estilo:</label>
+      <select id="selEstilo" name="selEstilo" class="selEstilo"></select>
+  </div>
+  <div class="inner-div">
+      <label for="selColor">Color:</label>
+      <input type="text" id="selColor" name="selColor">
+  </div>
+  <div class="inner-div">
+      <label for="selCombustible">Combustible:</label>
+      <select id="selCombustible" name="selCombustible" class="selCombustible"></select>
     </div>
     <div class="inner-div">
         <label for="selCilindrada">Cilindrada:</label>
@@ -177,9 +178,68 @@
       <a href="#" onclick="modificarVehiculo()" class="link flex"><i class="bx bx-pen"></i><span>Modificar</span></a>
     </div>
     <div class="item innerButton">
-      <a href="#" class="link flex"><i class="bx bx-trash"></i><span>Eliminar</span></a>
+      <a href="#" onclick="eliminarVehiculo()" class="link flex"><i class="bx bx-trash"></i><span>Eliminar</span></a>
     </div>
+    </div>
+
+    
+    <div class="opcionesDiv container insertarVehiculo">
+      <h2 class="innerTitle">Insertar Vehículo</h2>
+      <div class="item innerButton" id="cerrarButton">
+        <a onclick="cerrarOpciones()" class="link flex"><i class="bx bx-x"></i><span>Cerrar</span></a>
       </div>
+      <div class="inner-div">
+        <label for="selPlacaVI">Placa:</label>
+        <input type="text" id="selPlacaVI" name="selPlacaVI">
+    </div>
+    <div class="inner-div">
+        <label for="selMarcaVI">Marca:</label>
+        <select id="selMarcaVI" name="selMarcaVI" class="selMarca"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selModeloVI">Modelo:</label>
+        <input type="text" id="selModeloVI" name="selModeloVI">
+    </div>
+    <div class="inner-div">
+        <label for="selAnioVI">Año:</label>
+        <input type="number" id="selAnioVI" name="selAnioVI">
+    </div>
+    <div class="inner-div">
+        <label for="selTransVI">Transmisión:</label>
+        <select id="selTransVI" name="selTransVI" class="selTrans"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selEstiloVI">Estilo:</label>
+        <select id="selEstiloVI" name="selEstiloVI" class="selEstilo"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selColorVI">Color:</label>
+        <input type="text" id="selColorVI" name="selColorVI">
+    </div>
+    <div class="inner-div">
+        <label for="selCombustibleVI">Combustible:</label>
+        <select id="selCombustibleVI" name="selCombustibleVI" class="selCombustible"></select>
+    </div>
+    <div class="inner-div">
+        <label for="selCilindradaVI">Cilindrada:</label>
+        <input type="number" id="selCilindradaVI" name="selCilindradaVI">
+    </div>
+    <div class="inner-div">
+        <label for="selPasajerosVI">Número de Pasajeros:</label>
+        <input type="number" id="selPasajerosVI" name="selPasajerosVI">
+    </div>
+    <div class="inner-div">
+        <label for="selPuertasVI">Número de Puertas:</label>
+        <input type="number" id="selPuertasVI" name="selPuertasVI">
+    </div>
+    <div class="inner-div">
+      <label for="selEstadoVI">Estado:</label>
+      <input type="checkbox" id="selEstadoVI" name="selEstadoVI">
+    </div>
+    <div class="item innerButton">
+      <a href="#" onclick="insertarVehiculo()" class="link flex"><i class="bx bx-plus"></i><span>Añadir</span></a>
+    </div>
+    </div>
       <div class="opcionesDiv opcionesRepuesto">
         <h2 class="innerTitle">Opciones Repuesto</h2>
         <div class="scrollable-table">
