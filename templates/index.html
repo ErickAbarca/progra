@@ -57,7 +57,7 @@
 
     <!-- Navbar con boton buscar -->
     <nav class="navbar flex">
-      <input type="text" placeholder="Buscar..." class="search_box" />
+      <input type="text" placeholder="Buscar..." class="search_box" id="campo_buscar"/>
       <span class="nav_button item">
         <select name="filtros" id="filtros" title="filtros">
           <option value="placa">Placa</option>
@@ -69,7 +69,7 @@
         </select>
       </span>
       <span class="nav_button item">
-        <a id="boton_buscar" class="link flex"><i class="bx bx-search"></i></a>
+        <a id="boton_buscar" class="link flex" onclick="filtro()"><i class="bx bx-search"></i></a>
       </span>
       <span class="nav_button item">
         <a onclick="mostrarInsertarVehiculo()" id="boton_anadir" class="link flex"><i class="bx bx-plus"></i></a>

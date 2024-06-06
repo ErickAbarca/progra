@@ -478,6 +478,72 @@ def insertar_cliente():
     except Exception as e:
         logging.exception("Error al obtener los datos del request.")
         return jsonify({"error": "Datos inválidos"}), 400
+    
+@app.route('/api/filtro', methods=['POST'])
+def filtro():
+    datos = request.json
+    tabla = datos.get('tabla')
+    campo = datos.get('campo')
+    valor = datos.get('valor')
+    tipo = datos.get('tipo')
+    print(tabla, campo, valor, tipo)
+
+    try:
+        resultados = ejecutar_stored_procedure('SP_Filtro', f"'{tabla}', '{campo}', '{valor}', '{tipo}'")
+        if resultados:
+            if tabla == 'Vehiculo':
+                vehiculos = []
+                for fila in resultados:
+                    vehiculo = {
+                        'marca': fila[0],
+                        'modelo': fila[1],
+                        'anio': fila[2],
+                        'estilo': fila[3],
+                        'trans': fila[4],
+                        'placa': fila[5],
+                        'color': fila[6],
+                        'combustible': fila[7],
+                        'cilindrada': fila[8],
+                        'pasajeros': fila[9],
+                        'puertas': fila[10],
+                        'estado': fila[11]
+                    }
+                    vehiculos.append(vehiculo)
+                return jsonify(vehiculos), 200
+            elif tabla == 'Repuesto':
+                repuestos = []
+                for fila in resultados:
+                    repuesto = {
+                        'codigo': fila[0],
+                        'nombre': fila[1],
+                        'marca': fila[2],
+                        'modelo': fila[3],
+                        'cantidad': fila[4],
+                        'anio': fila[5],
+                    }
+                    repuestos.append(repuesto)
+                return jsonify(repuestos), 200
+            elif tabla == 'Cliente':
+                clientes = []
+                for fila in resultados:
+                    cliente = {
+                        'id': fila[0],
+                        'nombre': fila[1],
+                        'correo': fila[2],
+                        'direccion': fila[3]
+                    }
+                    clientes.append(cliente)
+                return jsonify(clientes), 200
+        else:
+            return jsonify({"message": "No se encontraron resultados"}), 404
+    except Exception as e:
+        app.logger.error(f"Error obteniendo resultados: {e}")
+        return jsonify({"error": "Error interno del servidor"}), 500
+    
+    
+
+            
+
 
 @app.route('/api/opciones', methods=['GET'])
 def opciones():

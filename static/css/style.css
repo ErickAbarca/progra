@@ -318,9 +318,15 @@ tbody tr:hover {
   border-radius: 4px;
 }
 .inner-div select {
-padding: 8px;
-border: 1px solid #ccc;
-border-radius: 4px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#filtros {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .repuestos {

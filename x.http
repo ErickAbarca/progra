@@ -97,3 +97,14 @@ Content-Type: application/json
     "correo": "maria@gmail.com",
     "direccion": "San Jose"
 }
+
+### filtro
+POST http://localhost:5000/api/filtro
+Content-Type: application/json
+
+{
+    "tabla": "Vehiculo",
+    "campo": "marca",
+    "valor": "Toyota",
+    "tipo": "varchar"
+}

@@ -46,7 +46,7 @@
 
   // codigo propio
 
-let activo = 'vehiculos';
+let activo = 'Vehiculo';
 
   function toggleActive(event) {
     event.preventDefault();
@@ -72,19 +72,19 @@ let activo = 'vehiculos';
     if (id === 'tabla-vehiculos') {
         opciones = ['Placa','Marca', 'Modelo', 'Año', 'Transmisión', 'Estilo'];
         document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarVehiculo()');
-        activo = 'vehiculos';
+        activo = 'Veiculo';
     } else if (id === 'tabla-repuestos') {
         opciones = ['Nombre', 'Marca', 'Modelo', 'Año', 'Cantidad'];
         document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarRepuesto()');
-        activo = 'repuestos';
+        activo = 'Repuesto';
     } else if (id === 'tabla-pedidos') {
         opciones = ['Nombre', 'Dirección', 'Correo', 'Fecha'];
         document.getElementById('boton_anadir').href = '/api/pedidos/insertar';
-        activo = 'pedidos';
+        activo = 'Pedido';
     } else if (id === 'tabla-clientes') {
         opciones = ['Nombre', 'Dirección', 'Email'];
         document.getElementById('boton_anadir').setAttribute('onclick', 'mostrarInsertarCliente()');
-        activo = 'clientes';
+        activo = 'Cliente';
     }
 
 
@@ -111,6 +111,10 @@ let activo = 'vehiculos';
       return response.json();
     })
     .then(data => {
+      cargarVehiculosAux(data);
+    });}
+
+    function cargarVehiculosAux(data){
       const tabla = document.getElementById('vehiculosLista');
       tabla.innerHTML = '';
       data.forEach(vehiculo => {
@@ -162,10 +166,8 @@ let activo = 'vehiculos';
 
     
         tabla.appendChild(fila);
-      });
-      
-    });
-  }
+      });  
+    }
 
   function cargarRepuestos() {
     url = 'http://127.0.0.1:5000/api/repuestos';
@@ -178,47 +180,51 @@ let activo = 'vehiculos';
       return response.json();
     })
     .then(data => {
-      const tabla = document.getElementById('repuestosLista');
-      tabla.innerHTML = '';
-      data.forEach(repuesto => {
-        const fila = document.createElement('tr');
-        const nombre = document.createElement('td');
-        nombre.textContent = repuesto.nombre;
-        fila.appendChild(nombre);
-        const marca = document.createElement('td');
-        marca.textContent = repuesto.marca;
-        fila.appendChild(marca);
-        const modelo = document.createElement('td');
-        modelo.textContent = repuesto.modelo;
-        fila.appendChild(modelo);
-        const anio = document.createElement('td');
-        anio.textContent = repuesto.anio;
-        fila.appendChild(anio);
-        const cantidad = document.createElement('td');
-        cantidad.textContent = repuesto.cantidad;
-        fila.appendChild(cantidad);
-        
-        const opciones = document.createElement('td');
-        opciones.className = 'opcionesContainer';
+      cargarRepuestosAux(data);
+    });
+  }
+
+  function cargarRepuestosAux(data){
     
-        const boton3 = document.createElement('button');
-        boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
-        boton3.addEventListener('click', function() {
-          const mostrado = document.querySelector('.opcionesRepuesto');
-          mostrado.style.display = 'grid';
-          document.getElementById('selCodigoR').value=repuesto.codigo;
-          document.getElementById('selNombreR').value=repuesto.nombre;
-          document.getElementById('selMarcaR').value=repuesto.marca;
-          document.getElementById('selModeloR').value=repuesto.modelo;
-          document.getElementById('selAnioR').value=repuesto.anio;
-          document.getElementById('selCodigoR').disabled=true;
-          document.getElementById('selCantidadR').value=repuesto.cantidad;
-        });
-        opciones.appendChild(boton3);
-        fila.appendChild(opciones);
-        tabla.appendChild(fila);
-      });
+    const tabla = document.getElementById('repuestosLista');
+    tabla.innerHTML = '';
+    data.forEach(repuesto => {
+      const fila = document.createElement('tr');
+      const nombre = document.createElement('td');
+      nombre.textContent = repuesto.nombre;
+      fila.appendChild(nombre);
+      const marca = document.createElement('td');
+      marca.textContent = repuesto.marca;
+      fila.appendChild(marca);
+      const modelo = document.createElement('td');
+      modelo.textContent = repuesto.modelo;
+      fila.appendChild(modelo);
+      const anio = document.createElement('td');
+      anio.textContent = repuesto.anio;
+      fila.appendChild(anio);
+      const cantidad = document.createElement('td');
+      cantidad.textContent = repuesto.cantidad;
+      fila.appendChild(cantidad);
       
+      const opciones = document.createElement('td');
+      opciones.className = 'opcionesContainer';
+  
+      const boton3 = document.createElement('button');
+      boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
+      boton3.addEventListener('click', function() {
+        const mostrado = document.querySelector('.opcionesRepuesto');
+        mostrado.style.display = 'grid';
+        document.getElementById('selCodigoR').value=repuesto.codigo;
+        document.getElementById('selNombreR').value=repuesto.nombre;
+        document.getElementById('selMarcaR').value=repuesto.marca;
+        document.getElementById('selModeloR').value=repuesto.modelo;
+        document.getElementById('selAnioR').value=repuesto.anio;
+        document.getElementById('selCodigoR').disabled=true;
+        document.getElementById('selCantidadR').value=repuesto.cantidad;
+      });
+      opciones.appendChild(boton3);
+      fila.appendChild(opciones);
+      tabla.appendChild(fila);
     });
   }
 
@@ -233,39 +239,43 @@ let activo = 'vehiculos';
       return response.json();
     })
     .then(data => {
-      const tabla = document.getElementById('clientesLista');
-      tabla.innerHTML = '';
-      data.forEach(cliente => {
-        const fila = document.createElement('tr');
-        const nombre = document.createElement('td');
-        nombre.textContent = cliente.nombre;
-        fila.appendChild(nombre);
-        const direccion = document.createElement('td');
-        direccion.textContent = cliente.correo;
-        fila.appendChild(direccion);
-        const email = document.createElement('td');
-        email.textContent = cliente.direccion;
-        fila.appendChild(email);
-        
-        const opciones = document.createElement('td');
-        opciones.className = 'opcionesContainer';
+      cargarCLientesAux(data);
+    });
+  }
+
+  function cargarCLientesAux(data){
     
-        const boton3 = document.createElement('button');
-        boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
-        boton3.addEventListener('click', function() {
-          const mostrado = document.querySelector('.opcionesCliente');
-          mostrado.style.display = 'grid';
-          document.getElementById('idC').value=cliente.id;
-          document.getElementById('selNombreC').value=cliente.nombre;
-          document.getElementById('selDireccionC').value=cliente.direccion;
-          document.getElementById('selCorreoC').value=cliente.correo;
-          document.getElementById('idC').disabled=true;
-        });
-        opciones.appendChild(boton3);
-        fila.appendChild(opciones);
-        tabla.appendChild(fila);
-      });
+    const tabla = document.getElementById('clientesLista');
+    tabla.innerHTML = '';
+    data.forEach(cliente => {
+      const fila = document.createElement('tr');
+      const nombre = document.createElement('td');
+      nombre.textContent = cliente.nombre;
+      fila.appendChild(nombre);
+      const direccion = document.createElement('td');
+      direccion.textContent = cliente.correo;
+      fila.appendChild(direccion);
+      const email = document.createElement('td');
+      email.textContent = cliente.direccion;
+      fila.appendChild(email);
       
+      const opciones = document.createElement('td');
+      opciones.className = 'opcionesContainer';
+  
+      const boton3 = document.createElement('button');
+      boton3.appendChild(document.createElement('i')).className = 'bx bx-detail boton';
+      boton3.addEventListener('click', function() {
+        const mostrado = document.querySelector('.opcionesCliente');
+        mostrado.style.display = 'grid';
+        document.getElementById('idC').value=cliente.id;
+        document.getElementById('selNombreC').value=cliente.nombre;
+        document.getElementById('selDireccionC').value=cliente.direccion;
+        document.getElementById('selCorreoC').value=cliente.correo;
+        document.getElementById('idC').disabled=true;
+      });
+      opciones.appendChild(boton3);
+      fila.appendChild(opciones);
+      tabla.appendChild(fila);
     });
   }
 
@@ -534,6 +544,49 @@ let activo = 'vehiculos';
   function mostrarInsertarCliente(){
     const mostrado = document.querySelector('.insertarCliente');
     mostrado.style.display = 'grid';
+  }
+
+  async function filtro(){
+    const filtro = document.getElementById('filtros').value;
+    const valor = document.getElementById('campo_buscar').value;
+    let tipo = 'varchar';
+    if (filtro == 'Año' || filtro == 'Cantidad'){tipo = 'int';}
+    const datos = {tabla:activo,campo:filtro,valor:valor,tipo:tipo};
+    url = 'http://127.0.0.1:5000/api/filtro'
+    try {
+      const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(datos)
+      });
+
+      if (!response.ok) {
+        alert('No se encontraron resultados');
+          throw new Error('Error en la solicitud: ' + response.statusText);
+      }
+
+      const resultados = await response.json();
+
+      if (response.status === 200) {
+          console.log('Resultados:', resultados);
+          if (activo === 'Vehiculo') {
+              cargarVehiculosAux(resultados);
+              console.log('Vehículos:', resultados);
+          } else if (activo === 'Repuesto') {
+              cargarRepuestosAux(resultados);
+              console.log('Repuestos:', resultados);
+          } else if (activo === 'Cliente') {
+              cargarCLientesAux(resultados);
+              console.log('Clientes:', resultados);
+          }
+      } else if (response.status === 404) {
+          console.log('No se encontraron resultados.');
+      }
+  } catch (error) {
+      console.error('Error:', error);
+  }
   }
   
   cargarOpciones();
